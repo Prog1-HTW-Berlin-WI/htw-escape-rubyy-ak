@@ -1,9 +1,5 @@
 package app;
 
-/**
- * @author ruby
- */
-
 import model.Hero;
 import model.HTWRoom;
 

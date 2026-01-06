@@ -1,9 +1,9 @@
 package model;
 
 /**
+ * Abstrakte Basisklasse für Aliens im Spiel
  * @author ruby
  */
-
 public abstract class Alien {
 
     // Bitte serialVersionUID beibehalten, damit die Klasse bei der

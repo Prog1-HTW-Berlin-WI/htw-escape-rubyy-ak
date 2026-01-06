@@ -9,6 +9,10 @@ import java.util.Scanner;
 
 public class EscapeApp {
 
+    /**
+ * @author onur
+ */
+
     public static final String SAVE_FILE_NAME = "save";
     private EscapeGame game;
     private boolean gameRunning = true;

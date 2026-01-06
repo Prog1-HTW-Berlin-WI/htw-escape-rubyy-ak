@@ -1,5 +1,9 @@
 package model;
 
+/**
+ * @author ruby
+ */
+
 import java.io.Serializable;
 
 public class Hero implements Serializable {

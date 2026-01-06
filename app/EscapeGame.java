@@ -4,7 +4,7 @@ import model.Hero;
 import model.HTWRoom;
 
 /**
- * Klasse für den Spielablauf des Escape-Games
+ * Klasse für den Spielablauf des Escape-Games.
  * @author ruby
  */
 

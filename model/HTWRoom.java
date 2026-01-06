@@ -3,6 +3,10 @@ package model;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * Repräsentiert einen Raum der HTW im Spiel
+ * @author ruby
+ */
 public class HTWRoom implements Serializable {
 
     // Bitte serialVersionUID beibehalten, damit die Klasse bei der

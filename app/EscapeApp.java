@@ -55,7 +55,7 @@ public class EscapeApp {
         // TBD
         return userInput;
     }
-/** Verarbeitet die Benutzereingabe. */
+    /** Verarbeitet hier die Benutzereingabe. */
     private void handleUserInput(String input) {
         switch (input) {
             case "1":

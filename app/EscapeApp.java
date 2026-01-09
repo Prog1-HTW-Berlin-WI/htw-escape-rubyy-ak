@@ -44,6 +44,27 @@ public class EscapeApp {
         System.out.println("You're in the main menu");
         System.out.println("What do you want to do next?");
         System.out.println("(1) Start new game");
+
+        // (2) Spiel fortsetzen – nur wenn ein Spiel gestartet wurde und noch nicht fertig ist
+        if (isGameRunning() && !isGameFinished()) {
+            System.out.println("(2) Resume game");
+        }
+
+        // (3) Spiel laden – nur wenn ein gespeichertes Spiel vorhanden ist
+        if (hasSavedGame()) {
+            System.out.println("(3) Load game");
+        }
+
+        // (4) Spiel speichern – nur wenn ein Spiel gestartet wurde
+        if (isGameRunning() && !isGameFinished()) {
+            System.out.println("(4) Save game");
+        }
+
+        // (5) Spiel löschen – nur wenn ein gespeichertes Spiel vorhanden ist
+        if (hasSavedGame()) {
+            System.out.println("(5) Delete saved game");
+        }
+
         System.out.println("(6) Quit");
         System.out.println("");
         System.out.println("Please choose a number between 1 and 6: ");
@@ -62,12 +83,47 @@ public class EscapeApp {
             case "1":
                 this.startGame();
                 break;
+
             case "2":
+                /** Spiel fortsetzen: nur anzeigen, wenn ein Spiel gestartet worden ist */
+                if (isGameRunning() && !isGameFinished()) {
+                    resumeGame();
+                } else {
+                    System.out.println("Option not available: No running game to resume.");
+                }
                 break;
-            // ...
+
+            case "3":
+                /** Spiel laden: nur anzeigen, wenn ein gespeichertes Spiel vorhanden ist */
+                if (hasSavedGame()) {
+                    loadGame();
+                } else {
+                    System.out.println("Option not available: No saved game found.");
+                }
+                break;
+
+            case "4":
+                /** Spiel speichern: nur anzeigen, wenn ein Spiel gestartet worden ist */
+                if (isGameRunning() && !isGameFinished()) {
+                    saveGame();
+                } else {
+                    System.out.println("Option not available: No running game to save.");
+                }
+                break;
+
+            case "5":
+                /** Spiel löschen: nur anzeigen, wenn ein gespeichertes Spiel vorhandne ist */
+                if (hasSavedGame()) {
+                    deleteGame();
+                } else {
+                    System.out.println("Option not available: No saved game to delete.");
+                }
+                break;
+
             case "6":
                 gameRunning = false;
                 break;
+
             default:
                 System.out.println("Invalid input. Please choose a correct number between 1 and 6");
                 break;
@@ -90,6 +146,8 @@ public class EscapeApp {
     private void deleteGame() {
         if (new File(SAVE_FILE_NAME).delete()) {
             System.out.println("Game deleted!");
+        } else {
+            System.out.println("No saved game could be deleted.");
         }
     }
 

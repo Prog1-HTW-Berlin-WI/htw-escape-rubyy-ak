@@ -21,7 +21,7 @@ public class EscapeApp {
     private EscapeGame game;
    
     /** Gibt an, ob das Spiel läuft. */
-    private boolean gameRunning = true;
+    private static boolean gameRunning = true;
 
     /** Startet das Spiel und zeigt das Hauptmenü an. */
     public static void main(String[] args) {
@@ -30,7 +30,7 @@ public class EscapeApp {
 
         EscapeApp app = new EscapeApp();
 
-        while (true) {
+        while (gameRunning) {
             app.showMainMenu();
             String choice = app.readUserInput();
             app.handleUserInput(choice);
@@ -65,6 +65,7 @@ public class EscapeApp {
                 break;
             // ...
             case "6":
+                gameRunning = false;
                 break;
             default:
                 System.out.println("Invalid input. Please choose a correct number between 1 and 6");

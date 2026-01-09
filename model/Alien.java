@@ -3,6 +3,7 @@ package model;
 /**
  * Abstrakte Basisklasse für Aliens im Spiel
  * @author ruby
+ * @author onur
  */
 public abstract class Alien {
 

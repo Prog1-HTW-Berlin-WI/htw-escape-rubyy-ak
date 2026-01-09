@@ -6,6 +6,7 @@ import model.HTWRoom;
 /**
  * Klasse für den Spielablauf des Escape-Games.
  * @author ruby
+ * @author onur
  */
 
 public class EscapeGame {

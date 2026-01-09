@@ -11,6 +11,7 @@ import java.util.Scanner;
  * Hauptklasse des Escape-Spiels.
  * Zeigt das Hauptmenuü des Spiels an.
  * @author onur
+ * @author ruby
  */
 public class EscapeApp {
    

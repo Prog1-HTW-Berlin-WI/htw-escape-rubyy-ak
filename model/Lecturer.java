@@ -5,6 +5,7 @@ import java.io.Serializable;
 /**
  * Repräsentiert einen Dozenten im Spiel
  * @author ruby
+ * @author onur
  */
 public class Lecturer implements Serializable {
 

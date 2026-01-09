@@ -5,6 +5,7 @@ import java.io.Serializable;
 /**
  * Repräsentiert die Spielfigur (Hero) im Spiel
  * @author ruby
+ * @author onur
  */
 public class Hero implements Serializable {
 

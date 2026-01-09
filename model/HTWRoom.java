@@ -6,6 +6,7 @@ import java.io.Serializable;
 /**
  * Repräsentiert einen Raum der HTW im Spiel
  * @author ruby
+ * @author onur
  */
 public class HTWRoom implements Serializable {
 

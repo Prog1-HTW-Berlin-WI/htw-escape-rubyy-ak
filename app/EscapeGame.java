@@ -1,6 +1,9 @@
 package app;
 
 import model.Hero;
+
+import java.util.Scanner;
+
 import model.HTWRoom;
 
 /**
@@ -62,7 +65,31 @@ public class EscapeGame {
      * Startet den Spielablauf.
      */
     public void run() {
+        System.out.println();
         System.out.println("The game has started. Or not?");
+        System.out.println();
+        System.out.println("========================================");
+        System.out.println("CHOOSE YOUR NAME");
+        System.out.println("========================================");
+        System.out.println();
+        System.out.println("Before your journey at HTW begins...");
+        System.out.println("What is your name, brave student?");
+        System.out.println();
+        System.out.print("Enter your name: ");
+        
+        Scanner scanner = new Scanner(System.in);
+        String name = scanner.nextLine().trim();
+        hero.setName(name);
+
+        // Überleitung zum Intro
+        System.out.println();
+        System.out.println("________________________________________");
+        System.out.println();
+        System.out.println("Not everything is as it seems...");
+        System.out.println("Look closer, " + hero.getName() + ".");
+        System.out.println();
+        System.out.println("(Press Enter to continue)");
+        scanner.nextLine();
     }
 
     /**

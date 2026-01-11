@@ -90,8 +90,11 @@ public class EscapeGame {
         System.out.println();
         System.out.println("(Press Enter to continue)");
         scanner.nextLine();
+        
+        showStoryIntro();
     }
-    private void showStoryIntro() {
+
+        private void showStoryIntro() {
         System.out.println("============================================================");
         System.out.println("THE AWAKENING – JANUARY 5th, 2026");
         System.out.println("============================================================");
@@ -129,7 +132,8 @@ public class EscapeGame {
         System.out.println();
         System.out.println("(1) Talk to the snail");
         System.out.println("(2) Attack the snail");
-    }
+        }
+        
     /**
      * Gibt den Helden des Spiels zurück.
      * @return Held des Spielers

@@ -91,7 +91,45 @@ public class EscapeGame {
         System.out.println("(Press Enter to continue)");
         scanner.nextLine();
     }
-
+    private void showStoryIntro() {
+        System.out.println("============================================================");
+        System.out.println("THE AWAKENING – JANUARY 5th, 2026");
+        System.out.println("============================================================");
+        System.out.println("The alarm goes off. You pack your bag and head to HTW.");
+        System.out.println("At the station, you grab your first coffee of the day, still half asleep.");
+        System.out.println();
+        System.out.println("Lost in thought, you enter Building A.");
+        System.out.println("Something feels wrong. The air is heavy. Too heavy.");
+        System.out.println("");
+        System.out.println("From the shadows, something moves."); 
+        System.out.println("A human-sized snail crawls toward you.");
+        System.out.println();
+        System.out.println("You stumble back in shock, spilling your hot coffee over yourself.");
+        System.out.println("Pain flashes through your body.");
+        System.out.println();
+        System.out.println("You turn and run for the exit.");
+        System.out.println("The door slams shut. Hermetically sealed.");
+        System.out.println();
+        System.out.println("On the glass, written in crooked letters:");
+        System.out.println("\"NO WAY OUT.\"");
+        System.out.println();
+        System.out.println("Your heart races. The snail is getting closer.");  
+        System.out.println("You glance at your bag. Could anything inside save you?");
+        System.out.println("The last drops of coffee in your cup… could they be a weapon?");
+        System.out.println();
+        System.out.println("You clutch your pencil tightly.");
+        System.out.println("It might be the only thing standing between you and death.");
+        System.out.println("As you prepare yourself, the creature tilts its head and says:");
+        System.out.println();
+        System.out.println("\"Excuse me, do you happen to know where I can find...\"");
+        System.out.println();
+        System.out.println("____________________");
+        System.out.println();
+        System.out.println("What do you want to do?");
+        System.out.println();
+        System.out.println("(1) Talk to the snail");
+        System.out.println("(2) Attack the snail");
+    }
     /**
      * Gibt den Helden des Spiels zurück.
      * @return Held des Spielers

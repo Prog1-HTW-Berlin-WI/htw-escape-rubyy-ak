@@ -17,7 +17,7 @@ public class Hero implements Serializable {
     // Name des Spielers
     private String name;
 
-    // Standard-Konstruktor
+    // Konstruktor
     public Hero() {
     }
 

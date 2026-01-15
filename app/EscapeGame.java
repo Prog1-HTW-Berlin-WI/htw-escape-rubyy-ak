@@ -1,6 +1,7 @@
 package app;
 
 import model.Hero;
+import model.Lecturer;
 
 import java.util.Scanner;
 
@@ -65,9 +66,13 @@ public class EscapeGame {
      * Startet den Spielablauf.
      */
     public void run() {
+        Scanner scanner = new Scanner(System.in);
+
         System.out.println();
         System.out.println("The game has started. Or not?");
         System.out.println();
+
+        // Name abfragen
         System.out.println("========================================");
         System.out.println("CHOOSE YOUR NAME");
         System.out.println("========================================");
@@ -77,7 +82,7 @@ public class EscapeGame {
         System.out.println();
         System.out.print("Enter your name: ");
         
-        Scanner scanner = new Scanner(System.in);
+        
         String name = scanner.nextLine().trim();
         hero.setName(name);
 
@@ -91,9 +96,111 @@ public class EscapeGame {
         System.out.println("(Press Enter to continue)");
         scanner.nextLine();
         
+        // Story-Intro
         showStoryIntro();
+
+        // Spiel-Menü
+        startGameMenu(scanner);
     }
 
+        private void startGameMenu(Scanner scanner) {
+            while (gameRunning) {
+                System.out.println("========================================");
+                System.out.println("What do you want to do?");
+                System.out.println("(1) Explore the university");
+                System.out.println("(2) Show hero status");
+                System.out.println("(3) Show run sheet");
+                System.out.println("(4) Take a break");
+                System.out.println("(5) Leave the game");
+                System.out.print("Please choose a number between 1 and 5: ");
+
+                String choice = scanner.nextLine().trim();
+
+                switch (choice) {
+                    case "1":
+                        exploreUniversity(scanner);
+                        break;
+                    case "2":
+                        showHeroStatus();
+                        break;
+                    case "3":
+                        showRunSheet();
+                        break;
+                    case "4":
+                        takeBreak(scanner);
+                        break;
+                    case "5":
+                        System.out.println("You leave the Game. Goodbye!");
+                        gameRunning = false;
+                        break;
+                    default:
+                        System.out.println("Invalid input. Please choose a number between 1 and 5: ");
+                }
+            }
+        }
+
+        private void exploreUniversity(Scanner scanner) {
+            // wird später hinzugefügt
+        }
+
+        private void showHeroStatus() {
+            System.out.println("========================================");
+            System.out.println("HERO STATUS");
+            System.out.println("========================================");
+            System.out.println("Name:   " + hero.getName());
+            System.out.println("Health: " + hero.getHealthPoints() + " / 50");
+            System.out.println("EXP:    " + hero.getExperiencePoints());
+            System.out.println();
+        }
+
+        private void showRunSheet() {
+            System.out.println("========================================");
+            System.out.println("RUN SHEET");
+            System.out.println("========================================");
+
+            Lecturer[] signed = hero.getSignedExerciseLeaders();
+            boolean empty = true;
+
+            for (int i = 0; i < signed.length; i++) {
+                if (signed[i] != null) {
+                    System.out.println("- " + signed[i].getName());
+                    empty = false;
+                }
+            }
+
+            if (empty) {
+                System.out.println("No signatures yet.");
+            }
+
+            System.out.println();
+        }
+
+        private void takeBreak(Scanner scanner) {
+            System.out.println("========================================");
+            System.out.println("TAKE A BREAK");
+            System.out.println("========================================");
+            System.out.println("(1) Short rest (+3 HP) [once per round]");
+            System.out.println("(2) Long rest (+10 HP) [costs a round]");
+            System.out.print("Please choose a number between 1 and 2: ");
+
+            String choice = scanner.nextLine().trim();
+
+            if (choice.equals("1")) {
+                hero.regenerate(false);
+                System.out.println("You take a short rest.");
+            } else if (choice.equals("2")) {
+                hero.regenerate(true);
+                System.out.println("You take a long rest.");
+                hero.startNewRound();
+            } else {
+                System.out.println("Invalid input.");
+            }
+
+            System.out.println();
+        }
+
+
+        // nach Namenseingabe soll kurz ein Intro folgen, bis der Spieler weiß, was das Ziel des Spieles ist. Nach dem Intro soll der Spieler zum Spiel-Menü weitergeleitet werden.
         private void showStoryIntro() {
         System.out.println("============================================================");
         System.out.println("THE AWAKENING – JANUARY 5th, 2026");

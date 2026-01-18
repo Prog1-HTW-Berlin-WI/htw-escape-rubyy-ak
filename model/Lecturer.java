@@ -16,6 +16,7 @@ public class Lecturer implements Serializable {
 
     // Attribute
     private String name;
+    private String description;
     private boolean hasSigned;
 
     /**
@@ -23,8 +24,9 @@ public class Lecturer implements Serializable {
      * 
      * @param name Name des Lecturers
      */
-    public Lecturer(String name) {
+    public Lecturer(String name, String description) {
         this.name = name;
+        this.description = description;
         this.hasSigned = false;
     }
 
@@ -36,6 +38,10 @@ public class Lecturer implements Serializable {
      */
     public String getName() {
         return name;
+    }
+
+    public String getDescription(){
+        return description;
     }
 
     /**

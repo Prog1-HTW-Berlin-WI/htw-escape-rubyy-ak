@@ -161,7 +161,7 @@ public class Hero implements Serializable {
      * 
      * @param lecturer der Lecturer, der unterschreiben soll
      */
-    public void signedExerciseLeaders(Lecturer lecturer) {
+    public void signExerciseLeader(Lecturer lecturer) {
 
         // Prüft, ob der Lecturer schon unterschrieben hat
         for (int i = 0; i < signExerciseLeaders.length; i++) { // Ganze Array durchgehen 

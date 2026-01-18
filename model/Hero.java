@@ -24,7 +24,7 @@ public class Hero implements Serializable {
     private String name;
     private int healthPoints = MAX_HP; // Aktuelle Lebenspunkte
     private int experiencePoints = 0; // Aktuelle Erfahrungspunkte
-    private Lecturer[] signedExerciseLeaders; // Unterschriebene Übungsleiter
+    private Lecturer[] signExerciseLeaders; // Unterschriebene Übungsleiter
 
     private boolean shortRestUsed; // Ob kurze Verschnaufspause genutzt wurde
     
@@ -36,7 +36,7 @@ public class Hero implements Serializable {
         this.name = "";
         this.healthPoints = MAX_HP;
         this.experiencePoints = 0;
-        this.signedExerciseLeaders = new Lecturer[SIGNATURES];
+        this.signExerciseLeaders = new Lecturer[SIGNATURES];
         this.shortRestUsed = false;
     }
 
@@ -59,7 +59,7 @@ public class Hero implements Serializable {
     }
 
     public Lecturer[] getSignedExerciseLeaders() {
-        return this.signedExerciseLeaders;
+        return this.signExerciseLeaders;
     }
 
     /** 
@@ -164,17 +164,17 @@ public class Hero implements Serializable {
     public void signedExerciseLeaders(Lecturer lecturer) {
 
         // Prüft, ob der Lecturer schon unterschrieben hat
-        for (int i = 0; i < signedExerciseLeaders.length; i++) { // Ganze Array durchgehen 
-            if (signedExerciseLeaders[i] == lecturer) {
+        for (int i = 0; i < signExerciseLeaders.length; i++) { // Ganze Array durchgehen 
+            if (signExerciseLeaders[i] == lecturer) {
                 System.out.println("This lecturer has already signed your sheet.");
                 return;
             }
         }
 
         // Ersten freien Platz im Laufzettel suchen
-        for (int i = 0; i < signedExerciseLeaders.length; i++) { // Ganze Array durchgehen 
-            if (signedExerciseLeaders[i] == null) { // Sucht den ersten freien Platz
-                signedExerciseLeaders[i] = lecturer; // dann hier eintragen
+        for (int i = 0; i < signExerciseLeaders.length; i++) { // Ganze Array durchgehen 
+            if (signExerciseLeaders[i] == null) { // Sucht den ersten freien Platz
+                signExerciseLeaders[i] = lecturer; // dann hier eintragen
                 System.out.println(lecturer.getName() + "has signed your sheet.");
                 return;
             }

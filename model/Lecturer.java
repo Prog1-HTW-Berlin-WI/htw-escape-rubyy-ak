@@ -68,7 +68,6 @@ public class Lecturer implements Serializable {
     public void sign() {
         if (!hasSigned) {
             hasSigned = true;
-            System.out.println(name + " has signed your sheet.");
         }
     }
 }

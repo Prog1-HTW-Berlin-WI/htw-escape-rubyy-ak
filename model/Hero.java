@@ -82,14 +82,14 @@ public class Hero implements Serializable {
      * 
      * Die Lebenspunkte dürfen MAX_HP nicht überschreiten.
      */
-    public void regenerate(boolean longRest) {
+    public boolean regenerate(boolean longRest) {
         int amount;
         if (longRest) { 
             amount = 10;
         } else { // wenn Nutzer kurze Verschnaufpause wählt (longRest == false)
             if (shortRestUsed) { // prüft, ob in dieser Runde eine kleine Pause schon benutzt wurde
-                System.out.println("Your already used your short rest this round.");
-                return; 
+                System.out.println("You already used your short rest this round.");
+                return false;
         }
         shortRestUsed = true; // kurze Verschnaufpause wird jetzt genutzt
         amount = 3; // regeneriert 3 Lebenspunkte
@@ -100,6 +100,7 @@ public class Hero implements Serializable {
         if (healthPoints > MAX_HP) { // Verhindert Überschreitung der maximalen Lebenspunkte
             healthPoints = MAX_HP;
         }
+        return true;
     }
 
 

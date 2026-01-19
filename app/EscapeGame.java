@@ -326,6 +326,7 @@ public class EscapeGame {
             }
 
             int missingSigs = 5 - signatureCount;
+            System.out.println();
             System.out.println("Signatures collected: " + signatureCount);
             System.out.println("Signatures needed: " + missingSigs);
 
@@ -368,12 +369,17 @@ public class EscapeGame {
             String choice = scanner.nextLine().trim();
 
             if (choice.equals("1")) {
-                hero.regenerate(false);
-                System.out.println("You take a short rest.");
+                if (hero.regenerate(false)) {
+                    System.out.println("You take a short rest.");
+                    System.out.println("Your health restored to " + hero.getHealthPoints() + " HP.");
+                }
             } else if (choice.equals("2")) {
-                hero.regenerate(true);
+                if (hero.regenerate(true)) {
                 System.out.println("You take a long rest.");
-                hero.startNewRound();
+                System.out.println("Your health restored to " + hero.getHealthPoints() + " HP.");
+                    round++; // lange Pause = eine Runde
+                    hero.startNewRound();
+                }
             } else {
                 System.out.println("Invalid input.");
             }

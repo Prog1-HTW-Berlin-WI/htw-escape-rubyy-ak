@@ -307,10 +307,32 @@ public class EscapeGame {
             System.out.println("========================================");
             System.out.println("HERO STATUS");
             System.out.println("========================================");
+            System.out.println("CHARACTER INFORMATION");
             System.out.println("Name:   " + hero.getName());
-            System.out.println("Health: " + hero.getHealthPoints() + " / 50");
+            System.out.println("Health: " + hero.getHealthPoints() + " / 50 HP");
             System.out.println("EXP:    " + hero.getExperiencePoints());
             System.out.println();
+            System.out.println("CURRENT ROUND");
+            System.out.println("Round: " + round + " / " + MAX_ROUNDS);
+            System.out.println();
+            System.out.println("RUN SHEET PROGRESS");
+            Lecturer[] signed = hero.getSignedExerciseLeaders();
+            int signatureCount = 0;
+            for (int i = 0; i < signed.length; i++) {
+                if (signed[i] != null) {
+                    signatureCount++;
+                    System.out.println(signed[i].getName());
+                }
+            }
+
+            int missingSigs = 5 - signatureCount;
+            System.out.println("Signatures collected: " + signatureCount);
+            System.out.println("Signatures needed: " + missingSigs);
+
+            if (missingSigs == 0) {
+                System.out.println();
+                System.out.println("You have collected all signatures! You can now search for Professor Majuntke.");
+            }
         }
 
         private void showRunSheet() {

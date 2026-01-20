@@ -23,7 +23,8 @@ public class EscapeGame {
     private boolean gameRunning = true;                     // Gibt an, ob das Spiel läuft.
     private boolean gameFinished = false;                   // Gibt an, ob das Spiel beendet ist.
     private int round = 1;                                  // Aktuelle Runde.
-    
+    private boolean majuntkeUnlocked = false;               // Gibt an, ob Majuntke freigeschaltet wurde.
+
     private final Random random = new Random();             // Zufallsgenerator
 
     private final Alien[] aliens = new Alien[] {            // Aliens im Spiel
@@ -39,6 +40,37 @@ public class EscapeGame {
         new Lecturer("Vaseva, Lyudmila", "Small and slim, wearing glasses, with long dark hair.")
     };
 
+    // Majuntke Fragen
+    private final String[] majuntkeQuestions = {
+        "What is a variable?",
+        "Which loop is guaranteed to run at least once?",
+        "What are primitive data types?"
+    };
+
+    // Antworten (Zwei-Dimensinales Array: erste Dimension -> welche Frage, zweite Dimension -> welche Antwort zu dieser Frage)
+    private final String[][] majuntkeAnswers = {
+        {
+            "A memory location used to store values.",
+            "A command to end a program.",
+            "An error in the code.",
+            "A method without a return value"
+        },
+        {
+            "for loop",
+            "while loop",
+            "do-while loop",
+            "foreach loop"
+        },
+        {
+            "Basic data types that store simple values like int, double, char or boolean.",
+            "Special classes used for graphics",
+            "Only text-based data types",
+            "Complex, objects that contain methods"
+        }
+    };
+
+    //Richtige Antworten
+    private final int[] majuntkeCorrect = {1, 3, 1};
 
     /**
      * Erstellt ein neues Spiel und initialisiert den Helden.
@@ -226,12 +258,32 @@ public class EscapeGame {
 
 
         private void exploreUniversity(Scanner scanner) {
-            
             // Wenn der Tag vorbei ist -> verloren
             if (round > MAX_ROUNDS) {
-                // Game over Text + Majuntke fliegt weg und sagt ein Spruch hier
+                System.out.println("========================================");
+                System.out.println("TIME IS UP");
+                System.out.println("========================================");
+                System.out.println("Suddenly something appears in front of you.");
+                System.out.println("It is Professor Majuntke.");
+                System.out.println();
+                System.out.println("She smiles.. then her body begins to change.");
+                System.out.println("Her skin cracks, her eyes glow. She is an alien.");
+                System.out.println("'You students are so silly..'");
+                System.out.println("'Those who do not study and organise themselves will always stay trapped here.'");
+                System.out.println("'See you next year!'");
+                System.out.println();
+                System.out.println("She slowly enters her spaceship and disappears into the darkness.");
+                System.out.println("-------------------------------------------------------");
+                System.out.println("                    GAME OVER                          ");
+                System.out.println("-------------------------------------------------------");
                 gameRunning = false;
                 gameFinished = true;
+                return;
+            }
+
+            // wenn Majuntke freigeschafaltet ist, kommt sie in der nächsten Erkudnungsrunde
+            if (majuntkeUnlocked) {
+                encounterProfessorMajuntke(scanner);
                 return;
             }
 
@@ -291,6 +343,12 @@ public class EscapeGame {
                 hero.signExerciseLeader(lecturer);
                 lecturer.sign();
                 System.out.println("Signature added to run sheet.");
+
+                // Majuntke wird freigeschaltet (wenn alle 5 Unterschriften gesammelt wurden) und erscheint in der nächsten Erkudnungsrunde
+                if (countSignatures() == lecturers.length) {
+                    majuntkeUnlocked = true;
+                }
+
             } else {
                 System.out.println("Lecturer is not ready to sign yet.");
             }
@@ -301,6 +359,107 @@ public class EscapeGame {
         private void encounterAlien(Scanner scanner) {
             Alien alien = aliens[random.nextInt(aliens.length)];
         }
+
+
+        // Spielende
+        private int countSignatures() {
+            int count = 0;
+            for (int i = 0; i < lecturers.length; i++) {
+                if (lecturers[i].hasSigned()) {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+
+
+        private boolean askRandomMajuntkeQuestion(Scanner scanner) {
+            int questionIndex = random.nextInt(majuntkeQuestions.length);
+
+            System.out.println("----------------------------------------");
+            System.out.println("MULTIPLE-CHOICE QUESTION");
+            System.out.println("----------------------------------------");
+            System.out.println(majuntkeQuestions[questionIndex]);
+            System.out.println();
+
+            for (int i = 0; i < 4; i++) {
+                System.out.println("(" + (i+1) +") " + majuntkeAnswers[questionIndex][i]);
+            }
+
+            System.out.println();
+            System.out.print("Your answer (1-4):" );
+            String input = scanner.nextLine().trim();
+
+            int choice ;
+            try {
+                choice = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                return false;
+            }
+            
+            return choice  == majuntkeCorrect[questionIndex];
+        }  
+
+
+        // Majuntke treffen
+        private void encounterProfessorMajuntke(Scanner scanner) {
+            System.out.println("========================================");
+            System.out.println("PROFESSORIN MAJUNTKE");
+            System.out.println("========================================");
+            System.out.println("Suddenly something appears in front of you.");
+            System.out.println("Bathed in a strange, shimmering light, stands Professor Majuntke.");
+            System.out.println();
+            System.out.println("'So you have collected all signatures..'");
+            System.out.println("'But a signature is just ink. To leave the Void, you must prove your knowledge, brave student.'");
+            System.out.println("She raises her hand and a glowing screen appears.");
+            System.out.println("'One final test. One question. Are you ready?'");
+
+            System.out.println();
+
+            // 1. Quizversuch
+            boolean passed = askRandomMajuntkeQuestion(scanner);
+
+            // 2. Quizversuch
+            if (!passed) {
+                System.out.println();
+                System.out.println("Wrong! Second chance granted, human!");
+                System.out.println("Don't disappoint me again..");
+                passed = askRandomMajuntkeQuestion(scanner);
+            }
+
+            // Ergebnis
+            if (passed) {
+                System.out.println("-------------------------------------------------------");
+                System.out.println("CORRECT!");
+                System.out.println("-------------------------------------------------------");
+                System.out.println("A golden light spreads through the room and the darkness vanishes.");
+                System.out.println("The black slime disappears, the air becomes clear again.");
+                System.out.println("The creatures turn back into students. The HTW is saved.");
+                System.out.println();
+                System.out.println("Professor Majuntke smiles and hands you the glowing certificate.");
+                System.out.println("I knew you could do it, brave student.");
+                System.out.println("-------------------------------------------------------");
+                System.out.println("                    VICTORY                             ");
+                System.out.println("-------------------------------------------------------");
+            } else {
+                System.out.println("Professor Majuntke smiles.. then her body begins to change.");
+                System.out.println("Her skin cracks, her eyes glow. She is an alien.");
+                System.out.println();
+                System.out.println("'You students are so silly..");
+                System.out.println("'Even after a second try, you still failed.'");
+                System.out.println("'Those who do not study and organise themselves will always stay trapped here.'");
+                System.out.println("'See you next year!'");
+                System.out.println();
+                System.out.println("She slowly enters her spaceship and disappears into the darkness.");
+                System.out.println("-------------------------------------------------------");
+                System.out.println("                    GAME OVER                          ");
+                System.out.println("-------------------------------------------------------");
+            }
+        
+        gameRunning = false;
+        gameFinished = true;
+    }
 
 
         private void showHeroStatus() {

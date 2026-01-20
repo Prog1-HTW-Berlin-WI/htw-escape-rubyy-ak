@@ -358,6 +358,83 @@ public class EscapeGame {
         // wird später weiter bearbeitet "Kämpfen oder Fliehen" oder freundliches Alien
         private void encounterAlien(Scanner scanner) {
             Alien alien = aliens[random.nextInt(aliens.length)];
+            // Only handle HostileAlien for fight/flee
+            if (!(alien instanceof HostileAlien)) {
+                System.out.println("You meet a friendly alien. It greets you and disappears into the shadows.");
+                return;
+            }
+
+            System.out.println("A hostile alien appears: " + alien.getName());
+            System.out.println(alien.getGreeting());
+            System.out.println();
+
+            // Kampfschleife: Nach jedem Zug wieder fragen
+            while (!alien.isDefeated() && hero.isOperational()) {
+                System.out.println("What do you want to do?");
+                System.out.println("(1) Fight");
+                System.out.println("(2) Flee");
+                System.out.print("Choose 1 or 2: ");
+                String choice = scanner.nextLine().trim();
+
+                if ("1".equals(choice)) {
+                    // Hero greift an
+                    int heroDamage = hero.attack();
+                    if (heroDamage == 0) {
+                        System.out.println("You missed!");
+                    } else if (heroDamage == Math.round((hero.getExperiencePoints() * 2.3 + 1) * 2)) {
+                        System.out.println("Critical hit! Double damage!");
+                        alien.takeDamage(heroDamage);
+                    } else {
+                        System.out.println("You hit the alien for " + heroDamage + " damage.");
+                        alien.takeDamage(heroDamage);
+                    }
+
+                    if (alien.isDefeated()) {
+                        System.out.println("You defeated the alien!");
+                        hero.addExperiencePoints(5);
+                        System.out.println("You gained 5 experience points.");
+                        return;
+                    }
+
+                    // Alien greift zurück
+                    int alienDamage = 6;
+                    System.out.println("The alien attacks you for " + alienDamage + " damage.");
+                    hero.takeDamage(alienDamage);
+                    System.out.println("Your health: " + hero.getHealthPoints());
+                    if (!hero.isOperational()) {
+                        System.out.println("You were defeated by the alien...");
+                        hero.addExperiencePoints(1);
+                        System.out.println("You gained 1 experience point.");
+                        gameRunning = false;
+                        gameFinished = true;
+                        return;
+                    }
+                } else if ("2".equals(choice)) {
+                    // Fluchtversuch
+                    boolean escaped = hero.flee();
+                    if (escaped) {
+                        System.out.println("You successfully escaped from the alien!");
+                        return;
+                    } else {
+                        System.out.println("You failed to escape! The alien attacks you!");
+                        // Alien greift an
+                        int alienDamage = 6;
+                        System.out.println("The alien attacks you for " + alienDamage + " damage.");
+                        hero.takeDamage(alienDamage);
+                        System.out.println("Your health: " + hero.getHealthPoints());
+                        if (!hero.isOperational()) {
+                            System.out.println("You were defeated by the alien...");
+                            hero.addExperiencePoints(1);
+                            System.out.println("You gained 1 experience point.");
+                            gameRunning = false;
+                            gameFinished = true;
+                            return;
+                        }
+                    }
+                } else {
+                    System.out.println("Invalid input. Please choose 1 or 2.");
+                }
+            }
         }
 
 

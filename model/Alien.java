@@ -67,7 +67,7 @@ public abstract class Alien {
             lifePoints = 0;
         }
 
-        System.out.println(name + " took " + amount + " damage. ");
+    //    System.out.println(name + " took " + amount + " damage. ");
         System.out.println("Remaining life points: " + lifePoints);
     }
 

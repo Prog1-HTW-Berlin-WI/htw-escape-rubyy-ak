@@ -398,10 +398,9 @@ public class EscapeGame implements Serializable {
                     int heroDamage = hero.attack();
                     if (heroDamage == 0) {
                         System.out.println("You missed!");
-                    } else if (heroDamage < 0) {
-                        int damage = -heroDamage; // Crit wieder positiv machen
+                    } else if (heroDamage == Math.round((hero.getExperiencePoints() * 2.3 + 1) * 2)) {
                         System.out.println("Critical hit! Double damage!");
-                        alien.takeDamage(damage);
+                        alien.takeDamage(heroDamage);
                     } else {
                         System.out.println("You hit the alien for " + heroDamage + " damage.");
                         alien.takeDamage(heroDamage);
@@ -503,7 +502,7 @@ public class EscapeGame implements Serializable {
         // Majuntke treffen
         private void encounterProfessorMajuntke(Scanner scanner) {
             System.out.println("========================================");
-            System.out.println("PROFESSORIN MAJUNTKE");
+            System.out.println("PROFESSOR MAJUNTKE");
             System.out.println("========================================");
             System.out.println("Suddenly something appears in front of you.");
             System.out.println("Bathed in a strange, shimmering light, stands Professor Majuntke.");

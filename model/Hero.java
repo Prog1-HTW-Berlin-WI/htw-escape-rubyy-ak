@@ -137,7 +137,7 @@ public class Hero implements Serializable {
         if (chance < 0.13) { 
             return 0; // 13% Miss
         } else if (chance < 0.25) {
-            return -((int) Math.round(baseDamage * 2)); // 12% Crit, Math.round rundet auf/ab
+            return (int) Math.round(baseDamage * 2); // 12% Crit, Math.round rundet auf/ab
         } else {
             return (int) Math.round(baseDamage); // Normaler Schaden
         }

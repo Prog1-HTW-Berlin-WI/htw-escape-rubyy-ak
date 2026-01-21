@@ -366,10 +366,10 @@ public class EscapeGame {
 
             System.out.println("A hostile alien appears: " + alien.getName());
             System.out.println(alien.getGreeting());
-            System.out.println();
 
             // Kampfschleife: Nach jedem Zug wieder fragen
             while (!alien.isDefeated() && hero.isOperational()) {
+                System.out.println();
                 System.out.println("What do you want to do?");
                 System.out.println("(1) Fight");
                 System.out.println("(2) Flee");
@@ -398,7 +398,7 @@ public class EscapeGame {
 
                     // Alien greift zurück
                     int alienDamage = 6;
-                    System.out.println("The alien attacks you for " + alienDamage + " damage.");
+                    System.out.println("The alien attacks you and deals " + alienDamage + " damage.");
                     hero.takeDamage(alienDamage);
                     System.out.println("Your health: " + hero.getHealthPoints());
                     if (!hero.isOperational()) {
@@ -419,7 +419,7 @@ public class EscapeGame {
                         System.out.println("You failed to escape! The alien attacks you!");
                         // Alien greift an
                         int alienDamage = 6;
-                        System.out.println("The alien attacks you for " + alienDamage + " damage.");
+                        System.out.println("The alien attacks you and deals " + alienDamage + " damage.");
                         hero.takeDamage(alienDamage);
                         System.out.println("Your health: " + hero.getHealthPoints());
                         if (!hero.isOperational()) {

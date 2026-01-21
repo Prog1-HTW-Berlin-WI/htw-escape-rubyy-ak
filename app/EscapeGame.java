@@ -20,6 +20,7 @@ import java.util.Scanner;
 public class EscapeGame implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    // Attribute
     private static final int MAX_ROUNDS = 24;               // Maximale Runden (24 Stunden)
     private final Hero hero;                                // Held des Spielers.
     private boolean introShown = false;
@@ -29,7 +30,7 @@ public class EscapeGame implements Serializable {
     private int round = 1;                                  // Aktuelle Runde.
     private boolean majuntkeUnlocked = false;               // Gibt an, ob Majuntke freigeschaltet wurde.
 
-    private transient Random random = new Random();             // Zufallsgenerator
+    private transient Random random = new Random();         // Zufallsgenerator
 
     private final Lecturer[] lecturers = new Lecturer[] {   // Übungsgruppenleiter*innen
         new Lecturer("Gärtner, Janine", "A calm lecturer with a warm smile and glasses."),
@@ -38,16 +39,14 @@ public class EscapeGame implements Serializable {
         new Lecturer("Safitri, Reni, Amelia", "Calm and friendly, with delicate features, glasses dark black hair."),
         new Lecturer("Vaseva, Lyudmila", "Small and slim, wearing glasses, with long dark hair.")
     };
-
-    // Majuntke Fragen
-    private final String[] majuntkeQuestions = {
+                                            
+    private final String[] majuntkeQuestions = {            // Majuntke Fragen
         "What is a variable?",
         "Which loop is guaranteed to run at least once?",
         "What are primitive data types?"
     };
 
-    // Antworten (Zwei-Dimensinales Array: erste Dimension -> welche Frage, zweite Dimension -> welche Antwort zu dieser Frage)
-    private final String[][] majuntkeAnswers = {
+    private final String[][] majuntkeAnswers = {            // Antworten (Zwei-Dimensinales Array: erste Dimension -> welche Frage, zweite Dimension -> welche Antwort zu dieser Frage)
         {
             "A memory location used to store values.",
             "A command to end a program.",
@@ -68,16 +67,24 @@ public class EscapeGame implements Serializable {
         }
     };
 
-    //Richtige Antworten
-    private final int[] majuntkeCorrect = {1, 3, 1};
+    private final int[] majuntkeCorrect = {1, 3, 1};           //Richtige Antworten
 
-    /**
-     * Erstellt ein neues Spiel und initialisiert den Helden.
-     */
+    
+    // Konstruktor
     public EscapeGame() {
         this.hero = new Hero();
         this.rooms = new HTWRoom[8];
         initRooms();
+    }
+
+
+    // Getter / Setter
+    /**
+     * Gibt den Helden des Spiels zurück.
+     * @return Held des Spielers
+     */
+    public Hero getHero() {
+        return hero;
     }
 
     /**
@@ -254,7 +261,7 @@ public class EscapeGame implements Serializable {
 
 
         /**
-         * Initialisiert Räume
+         * Initialisiert Räume mit ihren Beschreibungen und ggf. den zugehörigen Lecturer.
          */
         private void initRooms() {
             rooms[0] = new HTWRoom("A214", "Darkness-filled computer lab with neatly arranged PCs.", lecturers[0]);
@@ -267,7 +274,12 @@ public class EscapeGame implements Serializable {
             rooms[7] = new HTWRoom("Basement", "Dark lounge near the reading room with many cozy couches and small low tables.", null);
         }
 
-
+        /**
+         * Führt eine Erkundungsrunde durch.
+         * Erzeugt zufällige Ereignisse wie Alien, Lecturer oder nichts.
+         * 
+         * @param scanner Scanner
+         */
         private void exploreUniversity(Scanner scanner) {
             ensureRandom();
             
@@ -340,7 +352,12 @@ public class EscapeGame implements Serializable {
             hero.startNewRound(); // setzt short Rest zurück
         }
 
-            
+         /**
+          * Verarbeitet die Begegnung mit einem Lecturer.
+          * Prüft, ob eine Unterschrift möglich ist und trägt sie ggf. ein.
+          * 
+          * @param lecturer Der getroffene Lecturer
+          */   
         private void encounterLecturer(Lecturer lecturer) {
             System.out.println("You meet a lecturer:");
             System.out.println("Name " + lecturer.getName());
@@ -371,7 +388,12 @@ public class EscapeGame implements Serializable {
             return random.nextBoolean() ? new FriendlyAlien() : new HostileAlien();
         }
 
-        // wird später weiter bearbeitet "Kämpfen oder Fliehen" oder freundliches Alien
+        /**
+         * Verarbeitet eine Begegnung mit einem Alien.
+         * Bei feindlichen Aliens kann der Spieler kämpfen oder fliehen.
+         * 
+         * @param scanner
+         */
         private void encounterAlien(Scanner scanner) {
             Alien alien = createRandomAlien();
 
@@ -456,6 +478,11 @@ public class EscapeGame implements Serializable {
 
 
         // Spielende
+        /**
+         * Zählt die Anzahl der gesammelten Unterschriften.
+         * 
+         * @return Anzahl der bereits unterschriebenen Lecturer
+         */
         private int countSignatures() {
             int count = 0;
             Lecturer[] signed = hero.getSignedExerciseLeaders();
@@ -467,7 +494,12 @@ public class EscapeGame implements Serializable {
             return count;
         }
 
-
+        /**
+         * Stellt eine zufällige Multiple-Choice-Frage von Professorin Majuntke.
+         * 
+         * @param scanner Scanner
+         * @return true, wenn die Antwort korrekt ist, sonst false
+         */
         private boolean askRandomMajuntkeQuestion(Scanner scanner) {
             int questionIndex = random.nextInt(majuntkeQuestions.length);
 
@@ -499,7 +531,12 @@ public class EscapeGame implements Serializable {
         }  
 
 
-        // Majuntke treffen
+        /**
+         * Führt die finale Begegnung mit Professorin Majuntke aus.
+         * Enthält das Quiz und entscheidet über Sieg oder Niederlage.
+         * 
+         * @param scanner
+         */
         private void encounterProfessorMajuntke(Scanner scanner) {
             System.out.println("========================================");
             System.out.println("PROFESSOR MAJUNTKE");
@@ -642,13 +679,4 @@ public class EscapeGame implements Serializable {
 
             System.out.println();
         }
-
-
-    /**
-     * Gibt den Helden des Spiels zurück.
-     * @return Held des Spielers
-     */
-    public Hero getHero() {
-        return hero;
-    }
 }

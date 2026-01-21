@@ -176,7 +176,7 @@ public class EscapeApp {
     }
     /** Prüft, ob das Spiel läuft. */
     private boolean isGameRunning() {
-        return game != null;
+        return game != null && game.isGameRunning();
     }
     /** Prüft, ob das Spiel zu Ende ist. */
     private boolean isGameFinished() {

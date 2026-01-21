@@ -7,6 +7,7 @@ import model.HostileAlien;
 import model.HTWRoom;
 import model.Lecturer;
 
+import java.io.Serializable;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -16,21 +17,19 @@ import java.util.Scanner;
  * @author onur
  */
 
-public class EscapeGame {
+public class EscapeGame implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private static final int MAX_ROUNDS = 24;               // Maximale Runden (24 Stunden)
     private final Hero hero;                                // Held des Spielers.
+    private boolean introShown = false;
     private final HTWRoom[] rooms;                          // Räume des Spiels.
     private boolean gameRunning = true;                     // Gibt an, ob das Spiel läuft.
     private boolean gameFinished = false;                   // Gibt an, ob das Spiel beendet ist.
     private int round = 1;                                  // Aktuelle Runde.
     private boolean majuntkeUnlocked = false;               // Gibt an, ob Majuntke freigeschaltet wurde.
 
-    private final Random random = new Random();             // Zufallsgenerator
-
-    private final Alien[] aliens = new Alien[] {            // Aliens im Spiel
-        new FriendlyAlien(),
-        new HostileAlien()
-    };
+    private transient Random random = new Random();             // Zufallsgenerator
 
     private final Lecturer[] lecturers = new Lecturer[] {   // Übungsgruppenleiter*innen
         new Lecturer("Gärtner, Janine", "A calm lecturer with a warm smile and glasses."),
@@ -113,19 +112,31 @@ public class EscapeGame {
         this.gameFinished = gameFinished;
     }
 
+    private void ensureRandom() {
+        if (random == null) {
+            random = new Random();
+        }
+    }
+
     /**
      * Startet den Spielablauf.
      */
     public void run() {
+        ensureRandom();
         Scanner scanner = new Scanner(System.in);
 
         System.out.println();
         System.out.println("The game has started. Or not?");
         System.out.println();
 
-        askForName(scanner);
-        showIntro(scanner);
+        if (!introShown) {
+            askForName(scanner);
+            showIntro(scanner);
+            introShown = true;
+        }
+
         startGameMenu(scanner);
+        
     }
 
     /**
@@ -258,6 +269,8 @@ public class EscapeGame {
 
 
         private void exploreUniversity(Scanner scanner) {
+            ensureRandom();
+            
             // Wenn der Tag vorbei ist -> verloren
             if (round > MAX_ROUNDS) {
                 System.out.println("========================================");
@@ -345,7 +358,7 @@ public class EscapeGame {
                 System.out.println("Signature added to run sheet.");
 
                 // Majuntke wird freigeschaltet (wenn alle 5 Unterschriften gesammelt wurden) und erscheint in der nächsten Erkudnungsrunde
-                if (countSignatures() == lecturers.length) {
+                if (countSignatures() == 5) {
                     majuntkeUnlocked = true;
                 }
 
@@ -354,10 +367,14 @@ public class EscapeGame {
             }
         }
 
+        private Alien createRandomAlien() {
+            return random.nextBoolean() ? new FriendlyAlien() : new HostileAlien();
+        }
 
         // wird später weiter bearbeitet "Kämpfen oder Fliehen" oder freundliches Alien
         private void encounterAlien(Scanner scanner) {
-            Alien alien = aliens[random.nextInt(aliens.length)];
+            Alien alien = createRandomAlien();
+
             // Only handle HostileAlien for fight/flee
             if (!(alien instanceof HostileAlien)) {
                 System.out.println("You meet a friendly alien. It greets you and disappears into the shadows.");
@@ -381,9 +398,10 @@ public class EscapeGame {
                     int heroDamage = hero.attack();
                     if (heroDamage == 0) {
                         System.out.println("You missed!");
-                    } else if (heroDamage == Math.round((hero.getExperiencePoints() * 2.3 + 1) * 2)) {
+                    } else if (heroDamage < 0) {
+                        int damage = -heroDamage; // Crit wieder positiv machen
                         System.out.println("Critical hit! Double damage!");
-                        alien.takeDamage(heroDamage);
+                        alien.takeDamage(damage);
                     } else {
                         System.out.println("You hit the alien for " + heroDamage + " damage.");
                         alien.takeDamage(heroDamage);
@@ -441,14 +459,14 @@ public class EscapeGame {
         // Spielende
         private int countSignatures() {
             int count = 0;
-            for (int i = 0; i < lecturers.length; i++) {
-                if (lecturers[i].hasSigned()) {
+            Lecturer[] signed = hero.getSignedExerciseLeaders();
+            for (int i = 0; i < signed.length; i++) {
+                if (signed[i] != null) {
                     count++;
                 }
             }
             return count;
         }
-
 
 
         private boolean askRandomMajuntkeQuestion(Scanner scanner) {
@@ -471,6 +489,9 @@ public class EscapeGame {
             int choice ;
             try {
                 choice = Integer.parseInt(input);
+                if (choice < 1 || choice > 4) {
+                    return false;
+                }
             } catch (NumberFormatException e) {
                 return false;
             }

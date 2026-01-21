@@ -1,11 +1,13 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Abstrakte Basisklasse für Aliens im Spiel
  * @author ruby
  * @author onur
  */
-public abstract class Alien {
+public abstract class Alien implements Serializable {
 
     // Bitte serialVersionUID beibehalten, damit die Klasse bei der
     // Speicherung als Datei (Serialisierung) und beim Laden (Deserialisierung)
@@ -67,7 +69,7 @@ public abstract class Alien {
             lifePoints = 0;
         }
 
-    //    System.out.println(name + " took " + amount + " damage. ");
+        System.out.println(name + " took " + amount + " damage. ");
         System.out.println("Remaining life points: " + lifePoints);
     }
 

@@ -478,7 +478,7 @@ public class EscapeGame implements Serializable {
                     }
 
                     // Alien greift zurück
-                    int alienDamage = 4;
+                    int alienDamage = 3;
                     System.out.println("The alien attacks you and deals " + alienDamage + " damage.");
                     hero.takeDamage(alienDamage);
                     System.out.println("Your health: " + hero.getHealthPoints());

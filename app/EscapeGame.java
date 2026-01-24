@@ -443,12 +443,12 @@ public class EscapeGame implements Serializable {
 
             // Only handle HostileAlien for fight/flee
             if (!(alien instanceof HostileAlien)) {
-                System.out.println("You meet a friendly alien. It greets you and disappears into the shadows.");
+                System.out.println("You meet a friendly alien: " + alien.getName());
+                System.out.println(alien.getGreeting());
+                System.out.println("It greets you and disappears into the shadows.");
                 return;
             }
-
-            System.out.println("A hostile alien appears: " + alien.getName());
-            System.out.println(alien.getGreeting());
+            
 
             // Kampfschleife: Nach jedem Zug wieder fragen
             while (!alien.isDefeated() && hero.isOperational()) {

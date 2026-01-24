@@ -247,12 +247,10 @@ public class EscapeGame implements Serializable {
                         break;
                     case "5":
                         System.out.println("You leave the Game. Goodbye!");
-                        gameRunning = false;
-                        gameFinished = true;
+                        setGameRunning(false);
                         break;
                     default:
                         System.out.println("Invalid input. Please choose a number between 1 and 5: ");
-                        break;
                 }
 
                 System.out.println();

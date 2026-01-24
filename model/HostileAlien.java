@@ -3,6 +3,8 @@ package model;
 
 /**
  * Feindliches Alien 
+ * @author ruby
+ * @author onur
  */
 public class HostileAlien extends Alien {
 

@@ -234,6 +234,10 @@ public class EscapeGame implements Serializable {
 
                 switch (choice) {
                     case "1":
+                        if (!canExplore()) {
+                            printNoStrengthMessage();
+                            break;
+                        }
                         exploreUniversity(scanner);
                         break;
                     case "2":
@@ -675,6 +679,21 @@ public class EscapeGame implements Serializable {
                 System.out.println("Invalid input.");
             }
 
+            System.out.println();
+        }
+
+        private boolean canExplore() {
+            return hero.isOperational() && hero.getHealthPoints() > 0;
+        }
+
+        private void printNoStrengthMessage() {
+            System.out.println();
+            System.out.println("========================================");
+            System.out.println("NO MORE STRENGTH");
+            System.out.println("========================================");
+            System.out.println("Your body feels heavy... the Void is pulling you down.");
+            System.out.println("No more strength left. Take a break.");
+            System.out.println("========================================");
             System.out.println();
         }
 }

@@ -12,26 +12,36 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * Klasse für den Spielablauf des Escape-Games.
+ * Klasse für den Spielablauf des Escape-Games (Action Menu, Erkundungen, Encounters, Sieg/ Niederlage).
+ * Serialisierbar, damit der Spielstand gespeichert/geladen werden kann.
  * @author ruby
  * @author onur
  */
-
 public class EscapeGame implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    // Attribute
+    // Konstanten
     private static final int MAX_ROUNDS = 24;               // Maximale Runden (24 Stunden)
+
+    // Attribute
     private final Hero hero;                                // Held des Spielers.
-    private boolean introShown = false;
+    private boolean introShown = false;                     // um Intro nur einmal bei Spielstart zu zeigen.
     private final HTWRoom[] rooms;                          // Räume des Spiels.
     private boolean gameRunning = true;                     // Gibt an, ob das Spiel läuft.
     private boolean gameFinished = false;                   // Gibt an, ob das Spiel beendet ist.
     private int round = 1;                                  // Aktuelle Runde.
-    private boolean majuntkeUnlocked = false;               // Gibt an, ob Majuntke freigeschaltet wurde.
+    private boolean majuntkeUnlocked = false;               // Sobald alle 5 Unterschriften gesammelt sind, wird Majuntke beim nächsten Explore freigegschaltet.
 
+    /**
+     * Zufallsgenerator.
+     * Transient, damiit er nicht serialisiert wird (wird nach dem Laden neu initialisiert).
+     */
     private transient Random random = new Random();         // Zufallsgenerator
 
+
+
+    // Spielinhalte
+    /** Übungsgruppenleiter*innen, die Unterschriften geben können. */
     private final Lecturer[] lecturers = new Lecturer[] {   // Übungsgruppenleiter*innen
         new Lecturer("Gärtner, Janine", "A calm lecturer with a warm smile and glasses."),
         new Lecturer("Gnaui, Salim", "Serious and professional, dressed formally and very composed."),
@@ -39,13 +49,17 @@ public class EscapeGame implements Serializable {
         new Lecturer("Safitri, Reni, Amelia", "Calm and friendly, with delicate features, glasses dark black hair."),
         new Lecturer("Vaseva, Lyudmila", "Small and slim, wearing glasses, with long dark hair.")
     };
-                                            
-    private final String[] majuntkeQuestions = {            // Majuntke Fragen
+                              
+    
+    /** Fragen für Majuntke Quiz */
+    private final String[] majuntkeQuestions = {           
         "What is a variable?",
         "Which loop is guaranteed to run at least once?",
         "What are primitive data types?"
     };
 
+
+    /** Anwortmöglichkeiten pro Frage (4 optionen). */
     private final String[][] majuntkeAnswers = {            // Antworten (Zwei-Dimensinales Array: erste Dimension -> welche Frage, zweite Dimension -> welche Antwort zu dieser Frage)
         {
             "A memory location used to store values.",
@@ -67,10 +81,16 @@ public class EscapeGame implements Serializable {
         }
     };
 
-    private final int[] majuntkeCorrect = {1, 3, 1};           //Richtige Antworten
+
+    /** 
+     * Richtige Antworten
+     */
+    private final int[] majuntkeCorrect = {1, 3, 1};          
 
     
+
     // Konstruktor
+    /** Erstellt ein neues Spiel (Hero + Räume) */
     public EscapeGame() {
         this.hero = new Hero();
         this.rooms = new HTWRoom[8];
@@ -136,15 +156,18 @@ public class EscapeGame implements Serializable {
         System.out.println("The game has started. Or not?");
         System.out.println();
 
+        /** Intro wird nur einmal beim neuen Spielstart angezeigt. */
         if (!introShown) {
             askForName(scanner);
             showIntro(scanner);
             introShown = true;
         }
 
+        /** Game-Menp-Loop (bleibt hier, bis der Spieler das Spiel verlässt oder Game over/ Victory passiert). */
         startGameMenu(scanner);
         
     }
+
 
     /**
      * Fragt den Namen ab und speichert ihn im Hero.
@@ -173,6 +196,9 @@ public class EscapeGame implements Serializable {
         System.out.println();
     }
 
+    /**
+     * Gibt die Intro-Story aus.
+     */
     private void showIntro(Scanner scanner) {
         System.out.println("====================================================");
         System.out.println("THE AWAKENING – JANUARY 5th, 2026");
@@ -215,10 +241,14 @@ public class EscapeGame implements Serializable {
         System.out.println("Inside lies a blank form.");
         System.out.println("Your run sheet.");
         System.out.println();
-        System.out.println("(Press Enter to continue)");
-        scanner.nextLine();
     }
 
+
+        // Game-Menu
+        /** Zeigt das Game-Menü und verarbeitet Eingaben.
+         * Wenn Hero gegen Alien verliert kann er nicht weiter erkunden und MUSS "take a break" wählen um weiter zu erkunden.
+         * @param scanner
+         */
         private void startGameMenu(Scanner scanner) {
             while (gameRunning) {
                 System.out.println("========================================");
@@ -234,7 +264,7 @@ public class EscapeGame implements Serializable {
 
                 switch (choice) {
                     case "1":
-                        if (!canExplore()) {
+                        if (!canExplore()) {        //wenn der Spieler 0HP hat, darf er nicht weiter erkunden
                             printNoStrengthMessage();
                             break;
                         }
@@ -261,9 +291,9 @@ public class EscapeGame implements Serializable {
             }
         }
 
-
         /**
          * Initialisiert Räume mit ihren Beschreibungen und ggf. den zugehörigen Lecturer.
+         * Die Räume werden später zufällig ausgewähtl, wenn der Spieler "Explore" wählt.
          */
         private void initRooms() {
             rooms[0] = new HTWRoom("A214", "Darkness-filled computer lab with neatly arranged PCs.", lecturers[0]);
@@ -276,16 +306,22 @@ public class EscapeGame implements Serializable {
             rooms[7] = new HTWRoom("Basement", "Dark lounge near the reading room with many cozy couches and small low tables.", null);
         }
 
+
+
+        // Explore/ Encounters
+
         /**
          * Führt eine Erkundungsrunde durch.
-         * Erzeugt zufällige Ereignisse wie Alien, Lecturer oder nichts.
+         * Prüft Zeitlimit (Runde > MAX_ROUNDS)-> Game Over
+         * Wenn Majuntkw freigeschaltet ist -> finaler Encounter
+         * Sonst: Zufälliger Raum + Zufallsereignis (nichts / Alien / Lecturer)
          * 
          * @param scanner Scanner
          */
         private void exploreUniversity(Scanner scanner) {
             ensureRandom();
             
-            // Wenn der Tag vorbei ist -> verloren
+            // Wenn 24 Stunden vorbei ist -> verloren
             if (round > MAX_ROUNDS) {
                 System.out.println("========================================");
                 System.out.println("TIME IS UP");
@@ -314,16 +350,15 @@ public class EscapeGame implements Serializable {
                 return;
             }
 
-            HTWRoom room;
-
             // Zufallszahl 0..99 für Ereignisse
             int roll = random.nextInt(100);
 
             // Einfach zufälligen Raum wählen
+            HTWRoom room;
             room = rooms[random.nextInt(rooms.length)];
 
 
-            // Rundenanzeige
+            // Rundenanzeige + Location
             System.out.println("============================================================");
             System.out.println("EXPLORE HTW  |  Round: " + round + " / " + MAX_ROUNDS);
             System.out.println("Hours left: " + (MAX_ROUNDS - round));
@@ -334,6 +369,7 @@ public class EscapeGame implements Serializable {
 
 
             /**
+             * Verteilung der Ereignisse:
              * 0-19:  20% nichts passiert
              * 20-71: 52% Alien
              * 72-99: 28% Lecturer
@@ -343,7 +379,7 @@ public class EscapeGame implements Serializable {
             } else if (roll < 72) {     
                 encounterAlien(scanner);
             } else {              
-                if (room.hasLecturer() && !room.getLecturer().hasSigned()) {               // Lecturer im Raum     
+                if (room.hasLecturer() && !room.getLecturer().hasSigned()) {               //Lecturer nur, wenn im Raum vorhanden und noch nicht unterschrieben   
                     encounterLecturer(room.getLecturer());
                 } else {
                     System.out.println("There is no lecturer who can help you."); // passiert nur wenn alle Lecturers schon unterschrieben haben
@@ -358,11 +394,11 @@ public class EscapeGame implements Serializable {
           * Verarbeitet die Begegnung mit einem Lecturer.
           * Prüft, ob eine Unterschrift möglich ist und trägt sie ggf. ein.
           * 
-          * @param lecturer Der getroffene Lecturer
+          * @param lecturer Lecturer, den der Spieler trifft
           */   
         private void encounterLecturer(Lecturer lecturer) {
             System.out.println("You meet a lecturer:");
-            System.out.println("Name " + lecturer.getName());
+            System.out.println("Name: " + lecturer.getName());
             System.out.println("Description: " + lecturer.getDescription());
             System.out.println();
             
@@ -386,13 +422,19 @@ public class EscapeGame implements Serializable {
             }
         }
 
+        /**
+         * Erstelölt zufällig ein FriendlyAlien oder HostileAlien.
+         * 
+         * @return zufälliges Alien
+         */
         private Alien createRandomAlien() {
             return random.nextBoolean() ? new FriendlyAlien() : new HostileAlien();
         }
 
         /**
          * Verarbeitet eine Begegnung mit einem Alien.
-         * Bei feindlichen Aliens kann der Spieler kämpfen oder fliehen.
+         * FriendlyAlien: kurze Szene, keien Aktion nötig.
+         * HostileAlien: Kampf-/ Flucht-Loop.
          * 
          * @param scanner
          */
@@ -483,7 +525,7 @@ public class EscapeGame implements Serializable {
         /**
          * Zählt die Anzahl der gesammelten Unterschriften.
          * 
-         * @return Anzahl der bereits unterschriebenen Lecturer
+         * @return Anzahl Unterschriften
          */
         private int countSignatures() {
             int count = 0;
@@ -535,22 +577,21 @@ public class EscapeGame implements Serializable {
 
         /**
          * Führt die finale Begegnung mit Professorin Majuntke aus.
-         * Enthält das Quiz und entscheidet über Sieg oder Niederlage.
+         * Enthält das Quiz(+ Zweitversuch) und entscheidet über Sieg oder Niederlage.
          * 
-         * @param scanner
+         * @param scanner Scanner
          */
         private void encounterProfessorMajuntke(Scanner scanner) {
             System.out.println("========================================");
             System.out.println("PROFESSOR MAJUNTKE");
             System.out.println("========================================");
-            System.out.println("Suddenly something appears in front of you.");
+            System.out.println("Suddenly someone appears in front of you.");
             System.out.println("Bathed in a strange, shimmering light, stands Professor Majuntke.");
             System.out.println();
             System.out.println("'So you have collected all signatures..'");
             System.out.println("'But a signature is just ink. To leave the Void, you must prove your knowledge, brave student.'");
             System.out.println("She raises her hand and a glowing screen appears.");
             System.out.println("'One final test. One question. Are you ready?'");
-
             System.out.println();
 
             // 1. Quizversuch
@@ -598,6 +639,9 @@ public class EscapeGame implements Serializable {
     }
 
 
+        /**
+         * Gibt den Status des Heros aus (Name, HP, EXP, Runde, Unterschriften).
+         */
         private void showHeroStatus() {
             System.out.println("========================================");
             System.out.println("HERO STATUS");
@@ -631,6 +675,7 @@ public class EscapeGame implements Serializable {
             }
         }
 
+        /** Zeigt das Run Sheet (= alle bisher gesammelten Unterschriften). */
         private void showRunSheet() {
             System.out.println("========================================");
             System.out.println("RUN SHEET");
@@ -653,6 +698,12 @@ public class EscapeGame implements Serializable {
             System.out.println();
         }
 
+        /**
+         * Pausen-Menü: short rest oder long rest
+         * Short rest: +3HP (nur einmal pro Runde)
+         * Long rest: +10 HP (kostet eine Runde)
+         * @param scanner
+         */
         private void takeBreak(Scanner scanner) {
             System.out.println("========================================");
             System.out.println("TAKE A BREAK");
@@ -682,10 +733,18 @@ public class EscapeGame implements Serializable {
             System.out.println();
         }
 
+
+        /**
+         * Prüft, ob der Spieler noch erkunden darf.
+         * Bedingung: Hero ist "operational" und hat > 0HP.
+         * 
+         * @return true, wenn Erkunden erlaubt ist
+         */
         private boolean canExplore() {
             return hero.isOperational() && hero.getHealthPoints() > 0;
         }
 
+        /** Gitb die Meldung aus, wenn der Spieler keine Kraft mehr hat und eine Pause machen muss. */
         private void printNoStrengthMessage() {
             System.out.println();
             System.out.println("========================================");

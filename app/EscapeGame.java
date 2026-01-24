@@ -93,7 +93,7 @@ public class EscapeGame implements Serializable {
     /** Erstellt ein neues Spiel (Hero + Räume) */
     public EscapeGame() {
         this.hero = new Hero();
-        this.rooms = new HTWRoom[8];
+        this.rooms = new HTWRoom[5];
         initRooms();
     }
 
@@ -301,9 +301,6 @@ public class EscapeGame implements Serializable {
             rooms[2] = new HTWRoom("Infront of A114", "Small seating area and a coffee machine.", lecturers[2]);
             rooms[3] = new HTWRoom("Stairwell near Room 132  ", "Dark stairwell with four staircases next to each other., ", lecturers[3]);
             rooms[4] = new HTWRoom("A K31","Bright reading room with long tables, bookshelves, PCs and a quiet study atmosphere.", lecturers[4]);
-            rooms[5] = new HTWRoom("A143", "Seminar room with tables, foldable PCs and swivel chairs.", null);
-            rooms[6] = new HTWRoom("Basement hallway", "Dark cold and dirty with a slightly stuffy smell.", null);
-            rooms[7] = new HTWRoom("Basement", "Dark lounge near the reading room with many cozy couches and small low tables.", null);
         }
 
 
@@ -447,9 +444,10 @@ public class EscapeGame implements Serializable {
                 System.out.println(alien.getGreeting());
                 System.out.println("It greets you and disappears into the shadows.");
                 return;
+            } else {
+                System.out.println("You meet a hostile alien: " + alien.getName());
+                System.out.println(alien.getGreeting());
             }
-            
-
             // Kampfschleife: Nach jedem Zug wieder fragen
             while (!alien.isDefeated() && hero.isOperational()) {
                 System.out.println();
@@ -480,7 +478,7 @@ public class EscapeGame implements Serializable {
                     }
 
                     // Alien greift zurück
-                    int alienDamage = 6;
+                    int alienDamage = 4;
                     System.out.println("The alien attacks you and deals " + alienDamage + " damage.");
                     hero.takeDamage(alienDamage);
                     System.out.println("Your health: " + hero.getHealthPoints());
@@ -501,7 +499,7 @@ public class EscapeGame implements Serializable {
                     } else {
                         System.out.println("You failed to escape! The alien attacks you!");
                         // Alien greift an
-                        int alienDamage = 6;
+                        int alienDamage = 4;
                         System.out.println("The alien attacks you and deals " + alienDamage + " damage.");
                         hero.takeDamage(alienDamage);
                         System.out.println("Your health: " + hero.getHealthPoints());
